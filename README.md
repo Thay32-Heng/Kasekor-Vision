@@ -52,7 +52,8 @@ Make sure you have **Python 3.8 or higher** installed.
 Open your terminal (or Git Bash / WSL) and install the dependencies:
 ```bash
 pip install streamlit folium streamlit-folium pandas
+```
 
 # Developer
-Name: Heng Sengthay
-Major: Data Science and Engineering
+- **Name:** Heng Sengthay
+- **Major:** Data Science and Engineering
