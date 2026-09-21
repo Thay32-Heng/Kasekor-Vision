@@ -3,12 +3,16 @@ import streamlit as st
 import folium 
 from streamlit_folium import st_folium
 import pandas as pd
+from geopy.geocoders import Nominatim # library find a place
 
 # Set webpage config: Wide Mode
 st.set_page_config(
     page_title="Kasekor Vision - កម្មវិធីណែនាំដំណាំកសិកម្ម",
     layout= "wide"
     )
+
+# Initialize Geocoder 
+geolocator = Nominatim(user_agent="kasekor_vision_app")
 
 st.title("Kasekor Vision - ទស្សនៈវិស័យកសិករ")
 st.markdown("Select a location on the map and define the environmental condittions to receive optimal crop recommendations.")
@@ -30,8 +34,28 @@ with col1:
     #Check if a location was clicked
     if map_data and map_data.get("last_clicked"):
         clicked_lat = map_data["last_clicked"]["lat"]
-        clicked_lon = map_data["last_clicked"]["lng"]
-        st.success(f"Selected Location: Latitude: {clicked_lat:.4f},Lontitude:{clicked_lon:.4f}")
+        click_lon = map_data["last_clicked"]["lng"]
+
+        # Function Reverse Geocoding 
+        with st.spinner("Fetching location details..."):
+            try:
+                location = geolocator.reverse(f"{clicked_lat}, {clicked_lon}", language = "en")
+                address = location.raw.get("address", {})
+
+                # name of provice district or city
+                province = address.get("state", "Unknown Provice")
+                district = address.get("country", address.get("city",""))
+
+                # show maps
+                if district:
+                    location_name = f"{district}, {province}"
+                else:
+                    location_name = province
+
+                st.success(f"Selected Location: Latitude: {clicked_lat:.4f},Lontitude:{clicked_lon:.4f}")
+            except Exception as e:
+        # if has problem network or unknow
+                st.success(f"**Selected Location:** Lat: {clicked_lat:.4f}, Lon: {clicked_lon:.4f}")
     else:
         st.info("Please click on any location on the map to select an area.")
 with col2:
