@@ -54,6 +54,8 @@ Open your terminal (or Git Bash / WSL) and install the dependencies:
 pip install streamlit folium streamlit-folium pandas
 ```
 
+---
+
 # Developer
 - **Name:** Heng Sengthay
 - **Major:** Data Science and Engineering
