@@ -4,6 +4,7 @@ import folium
 from streamlit_folium import st_folium
 import pandas as pd
 from geopy.geocoders import Nominatim # library find a place
+from folium.plugins import MousePosition # For Hover Functionality
 
 # Set webpage config: Wide Mode
 st.set_page_config(
@@ -22,8 +23,28 @@ col1, col2 = st.columns(2)
 
 with col1:
     st.subheader("Map of Cambodia")
-    #Initialize the map centered on Cambodia 
-    m = folium.Map(location=[12.5657, 104.9910], zoom_start=7)
+    # Task 1: Restrict Map to Cambodia Only
+    # Cambodia's approximate bounding box; lat(10.0 to 15.0), lon (102.0 to 108.0) 
+    m = folium.Map(
+        location=[12.5657, 104.9910], 
+        zoom_start=7,
+        min_zoom = 7,
+        max_bounds=True,
+        min_lat=10.0,
+        max_lat=15.0,
+        min_lon=102.0,
+        max_lon=108.0
+        )
+
+    # Task 2: Add Mouse Hover Information
+    # This will show coordinate live when the user hovers over the map
+    MousePosition(
+        position = "topright",
+        separator = "|",
+        empty_string = "Hover over the map to see coordinates",
+        lng_first = False,
+        prefix= "Hover Location:"
+    ).add_to(m)
 
     #Render the map and capture click events
     map_data = st_folium(m, height=500, width=700)
